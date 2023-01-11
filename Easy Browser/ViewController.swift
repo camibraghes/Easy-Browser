@@ -6,6 +6,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     var webView: WKWebView!
     var progressView: UIProgressView!
     var websites = ["apple.com", "hackingwithswift.com"]
+    var forwardButton: UIBarButtonItem!
     
     override func loadView() {
         webView = WKWebView()
@@ -23,11 +24,12 @@ class ViewController: UIViewController, WKNavigationDelegate {
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let refresh = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
         let back = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(goBack))
+        let forward = UIBarButtonItem(title: "Forward", style: .plain, target: self, action: #selector(goForward))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open", style: .plain, target: self, action: #selector(openTapped))
         navigationItem.leftBarButtonItem = back
 
-        toolbarItems = [spacer, progressButton, spacer, refresh]
+        toolbarItems = [forward, spacer, progressButton, spacer, refresh]
         navigationController?.isToolbarHidden = false
         
         webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
@@ -54,6 +56,12 @@ class ViewController: UIViewController, WKNavigationDelegate {
             webView.goBack()
         } else {
             navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    @objc func goForward() {
+        if webView.canGoForward {
+            webView.goForward()
         }
     }
 
